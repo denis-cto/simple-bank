@@ -1,0 +1,13 @@
+FROM node:10-alpine
+ARG NPM_TOKEN
+ENV NPM_TOKEN=${NPM_TOKEN}
+
+RUN mkdir /app
+WORKDIR /app
+
+RUN apk add python alpine-sdk
+
+COPY . .
+
+RUN yarn config set strict-ssl false
+RUN yarn global add typescript

@@ -1,0 +1,153 @@
+#########################################################
+# Common Environment variables ConfigMap
+#########################################################
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: common-env
+data:
+  NAMESPACE: ""
+  LOGLEVEL: info
+  SERVICEDIR: dist/services
+  
+  
+  
+  
+  
+  TRANSPORTER: kafka://kafka:9092
+  
+  
+  
+  
+
+
+---
+#########################################################
+# Greeter service
+#########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: greeter
+spec:
+  selector:
+    matchLabels:
+      app: greeter
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: greeter
+    spec:
+      containers:
+      - name: greeter
+        image: ms-3-accounting
+        envFrom:
+        - configMapRef:
+            name: common-env
+        env:
+          - name: SERVICES
+            value: greeter
+
+
+
+
+
+
+
+---
+#########################################################
+# Zookeeper service
+#########################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+spec:
+  selector:
+    app: zookeeper
+  ports:
+  - port: 2181
+    name: zookeeper
+    targetPort: 2181
+
+---
+#########################################################
+# Zookeeper deployment
+#########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zookeeper
+spec:
+  selector:
+    matchLabels:
+      app: zookeeper
+  replicas: 1
+  strategy:
+    type: Recreate  
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      containers:
+      - name: zookeeper
+        image: bitnami/zookeeper
+        ports:
+        - containerPort: 2181
+          name: zookeeper
+        env:
+        - name: ALLOW_ANONYMOUS_LOGIN
+          value: "yes"
+
+---
+#########################################################
+# Kafka transporter service
+#########################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka
+spec:
+  selector:
+    app: kafka
+  ports:
+  - port: 9092
+    name: kafka
+    targetPort: 9092
+
+---
+#########################################################
+# Kafka transporter
+#########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka
+spec:
+  selector:
+    matchLabels:
+      app: kafka
+  replicas: 1
+  strategy:
+    type: Recreate  
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      containers:
+      - name: kafka
+        image: bitnami/kafka
+        ports:
+        - containerPort: 9092
+          name: kafka
+        env:
+        - name: KAFKA_CFG_ZOOKEEPER_CONNECT
+          value: zookeeper:2181
+        - name: KAFKA_CFG_ADVERTISED_LISTENERS
+          value: PLAINTEXT://kafka:9092
+        - name: ALLOW_PLAINTEXT_LISTENER
+          value: "yes"
+

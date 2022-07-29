@@ -1,0 +1,37 @@
+version: "3.3"
+
+services:
+  accounting:
+    build:
+      context: .
+    image: ms-3-accounting
+    env_file: docker-compose.env
+    environment:
+      SERVICES: accounting
+    depends_on:
+      - zookeeper
+    networks:
+      - internal
+
+  zookeeper:
+    image: bitnami/zookeeper
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - internal
+
+  kafka:
+    image: bitnami/kafka
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
+    networks:
+      - internal
+networks:
+  internal:
+
+volumes:
+  data:

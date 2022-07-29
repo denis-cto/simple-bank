@@ -1,0 +1,83 @@
+{
+  "name": "ms-3-accounting",
+  "version": "1.0.0",
+  "description": "My Moleculer-based microservices project",
+  "scripts": {
+    "build": "tsc --build tsconfig.json",
+    "dev": "ts-node ./node_modules/moleculer/bin/moleculer-runner.js --hot --repl --config moleculer.config.ts src/services/**/*.service.ts",
+    "start": "moleculer-runner --config dist/moleculer.config.js",
+    "cli": "moleculer connect Kafka",
+    "ci": "jest --watch",
+    "test": "jest --coverage",
+    "lint": "eslint --ext .js,.ts .",
+    "dc:up": "docker-compose up --build -d",
+    "dc:logs": "docker-compose logs -f",
+    "dc:down": "docker-compose down",
+    "db:migrate": "sequelize db:migrate",
+    "db:seed": "sequelize db:seed:all",
+    "db:migrate:undo": "sequelize db:migrate:undo",
+    "db:migrate:down": "sequelize db:migrate:undo:all",
+    "db:seed:down": "sequelize db:seed:undo:all",
+    "db:init": "sequelize init"
+  },
+  "keywords": [
+    "microservices",
+    "moleculer"
+  ],
+  "author": "",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.26.0",
+    "@typescript-eslint/parser": "^2.26.0",
+    "eslint": "7.20.0",
+    "eslint-config-airbnb-typescript": "12.3.1",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-prefer-arrow": "^1.2.2",
+    "jest": "^25.1.0",
+    "jest-cli": "^25.1.0",
+    "moleculer-repl": "^0.6.2",
+    "sequelize-cli-typescript": "3.2.0-c",
+    "ts-jest": "^25.3.0",
+    "ts-node": "^8.8.1",
+    "typescript": "4.1.5"
+  },
+  "dependencies": {
+    "@types/jest": "^25.1.4",
+    "@types/mkdirp": "^1.0.0",
+    "@types/node": "^13.9.8",
+    "@types/validator": "^13.7.4",
+    "dotenv": "^16.0.1",
+    "kafka-node": "^5.0.0",
+    "moleculer": "^0.14.0",
+    "moleculer-db": "^0.8.18",
+    "moleculer-db-adapter-sequelize": "^0.2.14",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "reflect-metadata": "^0.1.13",
+    "sequelize": "6.5.0",
+    "sequelize-typescript": "2.0.0",
+    "uuid": "^8.3.2"
+  },
+  "engines": {
+    "node": ">= 14.x.x"
+  },
+  "jest": {
+    "coverageDirectory": "<rootDir>/coverage",
+    "testEnvironment": "node",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "testMatch": [
+      "**/*.spec.(ts|js)"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.json"
+      }
+    }
+  }
+}

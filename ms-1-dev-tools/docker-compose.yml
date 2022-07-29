@@ -1,0 +1,36 @@
+version: "3.8"
+
+networks:
+  internal:
+    driver: bridge
+
+services:
+  zookeeper:
+    image: ${DC_IMAGE_ZOOKEEPER}
+    ports:
+      - ${DC_ZOOKEEPER_PORT}
+    hostname: zookeeper
+    networks:
+      - internal
+  kafka:
+    image: ${DC_IMAGE_KAFKA}
+    command: [start-kafka.sh]
+    ports:
+      - ${DC_KAFKA_PORTS}
+    hostname: kafka
+    env_file:
+      - .env.kafka
+    volumes:
+      - ${DC_KAFKA_VOLUMES}
+    depends_on:
+      - zookeeper
+    networks:
+      - internal
+  postgres:
+    image: ${DC_IMAGE_POSTGRES}
+    ports:
+      - ${DC_POSTGRES_HOST}:${DC_POSTGRES_HOST_PORT}:${DC_POSTGRES_PORT}
+    env_file:
+      - .env.postgres
+    networks:
+      - internal

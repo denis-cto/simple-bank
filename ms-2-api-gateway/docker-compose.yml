@@ -1,0 +1,33 @@
+version: "3.8"
+
+networks:
+  template-net:
+    driver: bridge
+  apigateway_api-net:
+    external: true
+  greenatom_atom_core-net:
+    external: true
+    name: greenatom_atom_core-net
+
+services:
+  api-gateway:
+    build:
+      context: .
+      args:
+        NPM_TOKEN: $NPM_TOKEN
+    env_file:
+      - .env
+    volumes:
+      - ./moleculer.config.ts:/app/moleculer.config.ts
+      - ./src:/app/src
+      - ./node_modules:/app/node_modules
+    # if you want to see metrics, exported by microservice, yor should uncomment 'ports' section and go to the
+    # http://localhost:MS_CFG_PROMETHEUS_HOST_PORT
+    ports:
+      - 3000:3000
+      - 9229:9229
+    #   - ${MS_CFG_PROMETHEUS_HOST_PORT}:${MS_CFG_PROMETHEUS_PORT}
+    networks:
+      - template-net
+      - apigateway_api-net
+      - greenatom_atom_core-net
