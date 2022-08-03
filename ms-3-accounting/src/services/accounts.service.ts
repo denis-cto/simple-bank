@@ -6,6 +6,8 @@ import Accounts from "../app/dto/accounts";
 import TransferEngine from "../app/models/TransferEngine";
 import ITransferParams from "./interfaces/ITransferParams";
 import Repository from "./repository";
+import {ResponseFactory} from "../../../ms-2-api-gateway/src/shared/utils";
+import {IRequest, IResponse, IServiceResponse} from "../../../ms-2-api-gateway/src/shared/models";
 
 export default class AccountsService extends Service {
 	protected db!: Sequelize;
@@ -38,7 +40,7 @@ export default class AccountsService extends Service {
 						amount: "number",
 					},
 					async handler(ctx: Context<ITransferParams>): Promise<string> {
-						return this.transferAmount(ctx.params);
+							return this.transferAmount(ctx.params);
 					},
 				},
 			},

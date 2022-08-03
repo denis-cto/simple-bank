@@ -4,7 +4,6 @@ import Sequelize, { QueryInterface, DataTypes } from "sequelize";
 export = {
 	up: async (queryInterface: QueryInterface): Promise<void> => {
 		await queryInterface.sequelize.query('CREATE EXTENSION IF NOT EXISTS "pgcrypto";');
-
 		await queryInterface.createTable("Journal", {
 			id: {
 				allowNull: false,
@@ -70,7 +69,8 @@ export = {
 				defaultValue: 0,
 			},
 		});
-		await queryInterface.sequelize.query(`DROP FUNCTION IF EXISTS updateBalance();
+		await queryInterface.sequelize.query(`
+		    DROP FUNCTION IF EXISTS updateBalance() cascade;
 			CREATE FUNCTION updateBalance() RETURNS trigger
 				LANGUAGE plpgsql
 				SET SCHEMA 'public'
@@ -79,37 +79,20 @@ export = {
 			DECLARE
 			newbalance decimal(10,2);
 			BEGIN
+				-- Data validation
+				IF COALESCE(NEW.debit, 0) < 0 THEN
+					RAISE EXCEPTION 'Debit value must be non-negative';
+				END IF;
 
-			-- Data validation
+				IF COALESCE(NEW.credit, 0) < 0 THEN
+					RAISE EXCEPTION 'Credit value must be non-negative';
+				END IF;
 
-			IF COALESCE(NEW.debit, 0) < 0 THEN
-			RAISE EXCEPTION 'Debit value must be non-negative';
-			END IF;
+				-- Update Current Table balance
 
-			IF COALESCE(NEW.credit, 0) < 0 THEN
-			RAISE EXCEPTION 'Credit value must be non-negative';
-			END IF;
+				NEW.balance =  COALESCE(NEW.debit, 0) -  COALESCE(NEW.credit, 0);
 
-			-- Update Current Table
-
-			 NEW.balance =  COALESCE(NEW.debit, 0) -  COALESCE(NEW.credit, 0);
-
-			-- Update Account balances
-
-			IF (TG_OP = 'INSERT' OR TG_OP = 'UPDATE') THEN
-			UPDATE "Accounts"
-			SET credit =  credit + COALESCE(NEW.credit, 0),
-			debit =  debit + COALESCE(NEW.debit, 0)
-			WHERE "accountId" = NEW."accountId";
-			END IF;
-			IF (TG_OP = 'UPDATE' OR TG_OP = 'DELETE') THEN
-			UPDATE "Accounts"
-			SET credit =  credit - COALESCE(OLD.credit, 0),
-			debit =  debit - COALESCE(OLD.debit, 0)
-			WHERE "accountId" = OLD."accountId";
-			END IF;
-
-			RETURN NEW;
+				RETURN NEW;
 			END;
 
 			$$;
@@ -134,33 +117,36 @@ export = {
 			AS
 			$$
 			BEGIN
+				-- Update Account balances
 
-			-- Update Account balances
-
-			IF (TG_OP = 'INSERT' OR TG_OP = 'UPDATE') THEN
+				IF (TG_OP = 'INSERT') THEN
 					UPDATE "Accounts"
 					SET credit =  credit + COALESCE(NEW.credit, 0),
-						debit =  debit + COALESCE(NEW.debit, 0)
+					debit =  debit + COALESCE(NEW.debit, 0)
 					WHERE "accountId" = NEW."accountId";
-			END IF;
-			IF (TG_OP = 'UPDATE' OR TG_OP = 'DELETE') THEN
+
+					RETURN NEW;
+				ELSIF (TG_OP = 'UPDATE') THEN
 					UPDATE "Accounts"
 					SET credit =  credit - COALESCE(OLD.credit, 0),
-						debit =  debit - COALESCE(OLD.debit, 0)
+					debit =  debit - COALESCE(OLD.debit, 0)
 					WHERE "accountId" = OLD."accountId";
-			END IF;
 
-			IF (TG_OP = 'INSERT') THEN
-				RETURN NEW;
-			END IF;
-			IF (TG_OP = 'UPDATE') THEN
-				RETURN OLD;
-			END IF;
-			IF (TG_OP = 'DELETE') THEN
-				RETURN NULL; -- ignored on delete
-			END IF;
+					UPDATE "Accounts"
+					SET credit =  credit + COALESCE(NEW.credit, 0),
+					debit =  debit + COALESCE(NEW.debit, 0)
+					WHERE "accountId" = NEW."accountId";
+
+					RETURN NEW;
+				ELSIF (TG_OP = 'DELETE') THEN
+					UPDATE "Accounts"
+					SET credit =  credit - COALESCE(OLD.credit, 0),
+					debit =  debit - COALESCE(OLD.debit, 0)
+					WHERE "accountId" = OLD."accountId";
+
+					RETURN OLD; -- ignored on delete
+				END IF;
 			END;
-
 			$$;
 
 			CREATE TRIGGER updateDebitCreditTrigger
@@ -185,8 +171,9 @@ export = {
 
 		},
 	down: async (queryInterface: QueryInterface): Promise<void> => {
-		await queryInterface.dropTable("Postings");
-		await queryInterface.dropTable("Journal");
-		await queryInterface.sequelize.query("DROP FUNCTION IF EXISTS updateBalance();");
+		await queryInterface.dropTable("Postings", { cascade: true});
+		await queryInterface.dropTable("Journal", { cascade: true});
+		await queryInterface.sequelize.query("DROP FUNCTION IF EXISTS updateBalance() cascade;");
+		await queryInterface.sequelize.query("DROP FUNCTION IF EXISTS updateDebitCredit() cascade;");
 	},
 };
