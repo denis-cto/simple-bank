@@ -1,7 +1,6 @@
 import {
 	Table, Column, DataType, AllowNull,
-	PrimaryKey, Model, Default, IsUUID,
-} from "sequelize-typescript";
+	PrimaryKey, Model, Default } from "sequelize-typescript";
 
 @Table({
 	tableName: "Journal",

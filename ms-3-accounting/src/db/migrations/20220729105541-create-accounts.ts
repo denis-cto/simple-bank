@@ -16,7 +16,7 @@ export = {
 			},
 			updatedAt: {
 				type: DataTypes.DATE,
-				defaultValue: Sequelize.literal('NOW()'),
+				defaultValue: Sequelize.literal("NOW()"),
 			},
 			balance: {
 				type: DataTypes.DECIMAL,

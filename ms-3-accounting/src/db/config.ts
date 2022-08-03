@@ -1,7 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 import dotenv from "dotenv";
 
-const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : ".env";
+const envFile = '.env';
 dotenv.config({ path: envFile });
 
 const {
@@ -12,7 +11,7 @@ const {
   MS_CFG_POSTGRES_OUT_PORT,
 } = process.env;
 
-const config = {
+module.exports = {
   dialect: "postgres",
   username: MS_CFG_POSTGRES_USER,
   password: MS_CFG_POSTGRES_PASSWORD,
@@ -33,4 +32,3 @@ const config = {
   },
   timezone: "+00:00", // For writing to database
 };
-export default config;

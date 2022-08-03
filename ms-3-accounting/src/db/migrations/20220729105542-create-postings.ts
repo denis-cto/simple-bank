@@ -10,17 +10,17 @@ export = {
 				allowNull: false,
 				primaryKey: true,
 				type: DataTypes.UUID,
-				defaultValue: Sequelize.literal('gen_random_uuid()'),
+				defaultValue: Sequelize.literal("gen_random_uuid()"),
 			},
 			accountId: {
 				allowNull: false,
 				type: DataTypes.UUID,
 				references: {
-					model: 'Accounts',
-					key: 'accountId',
+					model: "Accounts",
+					key: "accountId",
 				},
-				onUpdate: 'CASCADE',
-				onDelete: 'CASCADE',
+				onUpdate: "CASCADE",
+				onDelete: "CASCADE",
 			},
 			description: {
 				type: DataTypes.STRING,
@@ -32,27 +32,27 @@ export = {
 				allowNull: false,
 				primaryKey: true,
 				type: DataTypes.UUID,
-				defaultValue: Sequelize.literal('gen_random_uuid()'),
+				defaultValue: Sequelize.literal("gen_random_uuid()"),
 			},
 			journalId: {
 				allowNull: false,
 				type: DataTypes.UUID,
 				references: {
-					model: 'Journal',
-					key: 'id',
+					model: "Journal",
+					key: "id",
 				},
-				onUpdate: 'CASCADE',
-				onDelete: 'CASCADE',
+				onUpdate: "CASCADE",
+				onDelete: "CASCADE",
 			},
 			accountId: {
 				allowNull: false,
 				type: DataTypes.UUID,
 				references: {
-					model: 'Accounts',
-					key: 'accountId',
+					model: "Accounts",
+					key: "accountId",
 				},
-				onUpdate: 'CASCADE',
-				onDelete: 'CASCADE',
+				onUpdate: "CASCADE",
+				onDelete: "CASCADE",
 			},
 			balance: {
 				type: DataTypes.DECIMAL,
@@ -187,6 +187,6 @@ export = {
 	down: async (queryInterface: QueryInterface): Promise<void> => {
 		await queryInterface.dropTable("Postings");
 		await queryInterface.dropTable("Journal");
-		await queryInterface.sequelize.query(`DROP FUNCTION IF EXISTS updateBalance();`);
+		await queryInterface.sequelize.query("DROP FUNCTION IF EXISTS updateBalance();");
 	},
 };

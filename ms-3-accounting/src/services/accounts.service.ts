@@ -1,10 +1,10 @@
 "use strict";
 
 import {Service, ServiceBroker, Context} from "moleculer";
-import ITransferParams from "./interfaces/ITransferParams";
+import {Sequelize} from "sequelize-typescript";
 import Accounts from "../app/dto/accounts";
 import TransferEngine from "../app/models/TransferEngine";
-import {Sequelize} from "sequelize-typescript";
+import ITransferParams from "./interfaces/ITransferParams";
 import Repository from "./repository";
 
 export default class AccountsService extends Service {
@@ -52,11 +52,11 @@ export default class AccountsService extends Service {
 	public async transferAmount(params: ITransferParams): Promise<any> {
 		const sourceAccount = await Accounts.findByPk(params.sourceAccountId);
 		if (!sourceAccount) {
-			throw new Error('Source account doesn\'t exist');
+			throw new Error("Source account doesn't exist");
 		}
 		const destinationAccount = await Accounts.findByPk(params.destinationAccountId);
 		if (!destinationAccount) {
-			throw new Error('Destination account doesn\'t exist');
+			throw new Error("Destination account doesn't exist");
 		}
 		const transfer = new TransferEngine(
 			sourceAccount.accountId,
@@ -66,7 +66,7 @@ export default class AccountsService extends Service {
 		await Promise.all([sourceAccount.reload(), destinationAccount.reload()]);
 		return {
 			sourceAccountBalance: sourceAccount.balance,
-			destinationAccountBalance: destinationAccount.balance
-		}
+			destinationAccountBalance: destinationAccount.balance,
+		};
 	}
 }

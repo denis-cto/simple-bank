@@ -1,8 +1,8 @@
-import Accounts from "../dto/accounts";
-import Transaction from "sequelize/types/lib/transaction";
 import {Sequelize} from "sequelize-typescript";
+import Accounts from "../dto/accounts";
 import Journal from "../dto/journal";
 import Postings from "../dto/postings";
+import {Transaction} from "sequelize";
 
 export default class TransferEngine {
 	private readonly sourceAccount: string;
@@ -18,6 +18,7 @@ export default class TransferEngine {
 		await this.throwIfNotEnoughMoney(amount);
 		const transaction = await this.db.transaction({autocommit: false});
 		try {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 			// @ts-ignore
 			const journal = await Journal.create({accountId: this.sourceAccount, description}, {transaction});
 			await TransferEngine.makeDoubleEntry(journal.id, amount, this.sourceAccount, destinationAccount, transaction);
@@ -31,14 +32,16 @@ export default class TransferEngine {
 
 	private static async makeDoubleEntry(journalId: string, amount: number, sourceAccount: string, destinationAccount: string, transaction: Transaction): Promise<Postings[]> {
 		if (sourceAccount === destinationAccount) {
-			throw new Error('Operation is useless, source and destination are equal');
+			throw new Error("Operation is useless, source and destination are equal");
 		}
+		// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 		// @ts-ignore
 		const debitOperation = await Postings.create({
 			journalId,
 			accountId: destinationAccount,
 			debit: amount,
 		}, {transaction});
+		// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 		// @ts-ignore
 		const creditOperation = await Postings.create({
 			journalId,
@@ -50,14 +53,14 @@ export default class TransferEngine {
 
 	private static throwIfNegativeAmount(amount: number): void {
 		if (amount < 0) {
-			throw new Error('Amount cannot be negative');
+			throw new Error("Amount cannot be negative");
 		}
 	}
 
 	private async throwIfNotEnoughMoney(amount: number): Promise<void> {
 		const account = await Accounts.findByPk(this.sourceAccount);
 		if (amount > account.balance) {
-			throw new Error('Not enough money on source account');
+			throw new Error("Not enough money on source account");
 		}
 	}
 

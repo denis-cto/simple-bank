@@ -38,17 +38,46 @@ TransferEngine uses DependencyInjection for accessing DB.
 All actions - adding to Journal, debit/credit double write, trigger calculations are wrapped with transaction, so if any step of this fail, the whole transaction and all changes will be rolled back.
 
 ## How to launch.
-First got to all three folders and run `yarn` for installing node_modules.
-Then go to ms-1-dev-tools, and run `docker-compose up`.
-Now we have Kafka and PostgreSQL running.
-Next we start `Accounting`, 
- - `cd ms-3-accounting`
- - `yarn build && yarn db:migrate && yarn db:seed`
- - `yarn dev`
-Next we got to API Gateway
- - `cd ms-2-api-gateway`
- - `yarn build`
- - `yarn dev`
+Linux/Unix/MacOS: Update your `/etc/hosts` file with new records about host. Add the following records:
+```
+   127.0.0.1 kafka
+   127.0.0.1 db
+   127.0.0.1 localhost
+```
+Then launch Docker containers:
+
+```
+# cd ms-1-dev-tools
+# docker-compose up
+```
+
+Now we have Kafka and PostgreSQL running. 
+To Check if everything is Ok, scroll the output and make sure you will see records like these:
+![Install1](install1.png)
+![Install2](install2.png)
+
+In another terminal window:
+```
+# cd ms-2-api-gateway
+# yarn install
+# yarn dev
+```
+Now we have API Gateway running.
+The result output will look like this:
+![Install2](install3.png)
+
+
+Next we start `Accounting` microservice, using third terminal window, 
+```
+# cd ms-3-accounting
+# yarn install
+# yarn build 
+# yarn db:migrate 
+# yarn db:seed
+# yarn dev
+```
+After accounting microservice started, we can see output like this:
+![Install4](install4.png)
 
 Then open Postman and make request to API Gateway
 ![Postman](postman.png)

@@ -1,6 +1,6 @@
 import {
 	Table, Column, DataType, AllowNull,
-	PrimaryKey, Model, IsUUID, Default,
+	PrimaryKey, Model, Default,
 } from "sequelize-typescript";
 
 @Table({
