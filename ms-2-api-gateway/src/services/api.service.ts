@@ -1,7 +1,6 @@
 import { ServiceSchema } from 'moleculer';
 import ApiGateway from 'moleculer-web';
 import { ResponseFactory } from '../shared/utils';
-import { authenticate } from '../api/methods';
 import CORSPassThrough from '../middlewares/cors.pass.through';
 
 const ApiService: ServiceSchema = {
@@ -63,7 +62,6 @@ const ApiService: ServiceSchema = {
       return Promise.resolve();
     },
   },
-  methods: { authenticate },
 };
 
 export = ApiService;

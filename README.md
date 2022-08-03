@@ -64,7 +64,7 @@ In another terminal window:
 ```
 Now we have API Gateway running.
 The result output will look like this:
-![Install2](install3.png)
+![Install3](install3.png)
 
 
 Next we start `Accounting` microservice, using third terminal window, 
@@ -80,6 +80,10 @@ After accounting microservice started, we can see output like this:
 ![Install4](install4.png)
 
 Then open Postman and make request to API Gateway
+
+You can "Import collection" from this URL: https://www.getpostman.com/collections/caa949abc094daffc41a
+
+
 ![Postman](postman.png)
 
 ## Usage in REpl console

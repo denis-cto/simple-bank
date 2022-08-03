@@ -34,7 +34,8 @@ export = {
 				defaultValue: 0,
 			},
 		});
-		await queryInterface.sequelize.query(`DROP FUNCTION IF EXISTS updateAccountBalance();
+		await queryInterface.sequelize.query(`
+		DROP FUNCTION IF EXISTS updateAccountBalance() cascade;
 			CREATE FUNCTION updateAccountBalance() RETURNS trigger
 				LANGUAGE plpgsql
 				SET SCHEMA 'public'
@@ -75,6 +76,7 @@ export = {
 		},
 	down: async (queryInterface: QueryInterface): Promise<void> => {
 		await queryInterface.sequelize.query('DROP EXTENSION IF EXIST "uuid-ossp";');
-		return queryInterface.dropTable("Accounts");
+		await queryInterface.dropTable("Accounts", { cascade: true});
+		await queryInterface.sequelize.query("DROP FUNCTION IF EXISTS updateAccountBalance() cascade;");
 	},
 };

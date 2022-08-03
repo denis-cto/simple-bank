@@ -50,7 +50,11 @@ Next we got to API Gateway
  - `yarn build`
  - `yarn dev`
 
-Then open Postman and make request to API Gateway
+Then open Postman and make request to API Gateway. 
+You can use 
+"Import collection" from this URL: https://www.getpostman.com/collections/caa949abc094daffc41a
+
+
 ![Postman](postman.png)
 
 ## Usage in REpl console
