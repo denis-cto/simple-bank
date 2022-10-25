@@ -50,7 +50,7 @@
     "moleculer": "^0.14.0",
     "moleculer-db": "^0.8.18",
     "moleculer-db-adapter-sequelize": "^0.2.14",
-    "pg": "^8.7.3",
+    "pg": "^8.8.0",
     "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.1.13",
     "sequelize": "6.2.0",
