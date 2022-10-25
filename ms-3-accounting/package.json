@@ -44,7 +44,7 @@
     "@types/jest": "^25.1.4",
     "@types/mkdirp": "^1.0.0",
     "@types/node": "^13.9.8",
-    "@types/validator": "^13.7.4",
+    "@types/validator": "^13.7.7",
     "dotenv": "^16.0.1",
     "kafka-node": "^5.0.0",
     "moleculer": "^0.14.0",
