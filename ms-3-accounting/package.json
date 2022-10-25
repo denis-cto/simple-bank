@@ -45,7 +45,7 @@
     "@types/mkdirp": "^1.0.0",
     "@types/node": "^13.9.8",
     "@types/validator": "^13.7.4",
-    "dotenv": "^16.0.1",
+    "dotenv": "^16.0.3",
     "kafka-node": "^5.0.0",
     "moleculer": "^0.14.0",
     "moleculer-db": "^0.8.18",
