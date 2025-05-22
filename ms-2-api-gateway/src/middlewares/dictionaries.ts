@@ -10,13 +10,6 @@ const routingCache = new Map();
 const dictionaries: Middleware = {
   // @ts-ignore
   serviceCreating: (service: Service, schema: ServiceSchema): any => {
-    if (!schema.dictionaries) {
-      return;
-    }
-    if (!schema.routes) {
-      schema.routes = [];
-    }
-
     const routes = {
       ...schema.dictionaries.options,
       aliases: {},
@@ -98,11 +91,6 @@ const baseHandler = async (callName: string, params: any, req: IRequest, res: IR
 
   if (response.statusCode !== 200) {
     return ResponseFactory.createServerErrorResponse(res, response.error);
-  } else {
-    // eslint-disable-next-line id-blacklist
-    return response.data === undefined && response.errors !== undefined
-      ? ResponseFactory.createServerErrorResponse(res, response.errors)
-      : ResponseFactory.createSuccessResponse(res, response.data);
   }
 };
 
