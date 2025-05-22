@@ -37,10 +37,6 @@ const ApiService: ServiceSchema = {
         },
       },
     },
-    servers: [
-    ],
-    schema: null,
-    shouldUpdateSchema: true,
     routes: [
     // Expiremental autoAlias routes
     {
