@@ -11,7 +11,7 @@ const dictionaries: Middleware = {
   // @ts-ignore
   serviceCreating: (service: Service, schema: ServiceSchema): any => {
     if (!schema.dictionaries) {
-      return;
+      return false;
     }
     if (!schema.routes) {
       schema.routes = [];
@@ -21,6 +21,8 @@ const dictionaries: Middleware = {
       ...schema.dictionaries.options,
       aliases: {},
     };
+
+    return true;
 
     routes.aliases[ 'GET list' ] = baseGetHandler('list');
     routes.aliases[ 'GET :name' ] = baseGetHandler('getByName');
