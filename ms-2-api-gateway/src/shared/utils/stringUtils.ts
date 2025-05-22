@@ -11,6 +11,17 @@ export const replaceStrings = obj=> {
                     obj[key] = replaceStrings(obj[key]);
                 }
                 const result = parseInt(obj[key], 10);
+                if (!isNaN(result) && result.toString(10).length === (obj[key]).length && !Array.isArray(obj[key])) {
+                    obj[key] = true;
+                } else {
+                    if (obj[key] === 'true') {
+                        obj[key] = true;
+                    } else if (obj[key] === 'false') {
+                        obj[key] = false;
+                    } else if (obj[key] === '') {
+                        obj[key] = null;
+                    }
+                }
             }
         }
     }
