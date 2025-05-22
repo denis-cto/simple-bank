@@ -7,8 +7,8 @@ export default (req: IncomingMessage, res: ServerResponse, next: any): void => {
     res.setHeader('Access-Control-Allow-Methods', [ 'GET', 'OPTIONS', 'POST', 'PUT', 'DELETE' ].join(', '));
     res.setHeader('Access-Control-Expose-Headers', '*');
     res.setHeader('Access-Control-Allow-Headers', 'origin, x-requested-with, content-type, accept, authorization, jwt');
-    res.setHeader('Access-Control-Allow-Credentials', 'false');
-    res.setHeader('Access-Control-Max-Age', 8000);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Max-Age', 9000);
 
     if (req.method === 'OPTIONS') {
       res.writeHead(204, {

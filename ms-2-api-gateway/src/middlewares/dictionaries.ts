@@ -88,9 +88,6 @@ const baseHandler = async (callName: string, params: any, req: IRequest, res: IR
       }
     }
 
-    delete params.catalogName;
-    delete params.catalogMethod;
-
     response = await req.$ctx.call(`${remote}.${callName}`, params);
   } catch (error) {
     throw ResponseFactory.createServiceUnavailableResponse(res, error);
