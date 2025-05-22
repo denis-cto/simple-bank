@@ -11,7 +11,7 @@ const dictionaries: Middleware = {
   // @ts-ignore
   serviceCreating: (service: Service, schema: ServiceSchema): any => {
     if (!schema.dictionaries) {
-      return;
+      return false;
     }
     if (!schema.routes) {
       schema.routes = [];
@@ -21,6 +21,8 @@ const dictionaries: Middleware = {
       ...schema.dictionaries.options,
       aliases: {},
     };
+
+    return true;
 
     routes.aliases[ 'GET list' ] = baseGetHandler('list');
     routes.aliases[ 'GET :name' ] = baseGetHandler('getByName');
@@ -87,9 +89,6 @@ const baseHandler = async (callName: string, params: any, req: IRequest, res: IR
         remote = dictionaryMeta.remote;
       }
     }
-
-    delete params.catalogName;
-    delete params.catalogMethod;
 
     response = await req.$ctx.call(`${remote}.${callName}`, params);
   } catch (error) {

@@ -14,13 +14,6 @@ export const modelGetList = (method: string) => {
 
     return ResponseFactory.createSuccessResponse(res, {
       list: response.rows,
-      pagination: {
-        page: response.page,
-        perPage: response.pageSize,
-        sort: 'none',
-        totalItems: response.totalPages * response.pageSize,
-        totalPages: response.totalPages,
-      },
     });
   };
 
@@ -37,16 +30,9 @@ export const modelSaveForm = (method: string) => {
     }
 
     try {
-      if (req.body[`${method}Id`]) {
-        responseService = await req.$ctx.call(`${method}.update`, {
-          ...req.body,
-        });
-      }
-      else {
-        responseService = await req.$ctx.call(`${method}.create`, {
-          ...req.body,
-        });
-      }
+      responseService = await req.$ctx.call(`${method}.update`, {
+        ...req.body,
+      });
     } catch (error) {
       throw ResponseFactory.createServiceUnavailableResponse(res, error);
     }
