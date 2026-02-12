@@ -56,7 +56,7 @@
     "moleculer-web": "0.9.1",
     "nats": "1.4.12",
     "path-to-regexp": "6.2.0",
-    "qs": "6.10.3",
+    "qs": "6.14.2",
     "redis": "4.0.4",
     "swagger-ui-dist": "3.28.0",
     "uid": "2.0.0",
